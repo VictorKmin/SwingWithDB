@@ -1,18 +1,28 @@
 import java.sql.*;
 
 public class DBCoonect {
-    String url ="jdbc:mysql://localhost:3306/bank";
+    String url = "jdbc:mysql://localhost:3306/bank";
     String username = "root";
     String password = "root";
     String res;
 
-    GUI gui = new GUI();
     Connection connection;
-    {
+    GUI gui;
+
+    public DBCoonect(GUI gui) {
+        this.gui = gui;
+    }
+
+
+    public String doRequestWhenClick() {
+
         try {
-            connection = DriverManager.getConnection(url,username,password);
-            String takeUser = "SELECT * FROM test WHERE test_id LIKE " + gui.getInpt();
-            PreparedStatement ps = connection.prepareStatement(takeUser);
+            connection = DriverManager.getConnection(url, username, password);
+            String query = "SELECT * FROM test WHERE test_id = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, Integer.parseInt(gui.getInpt().getText()));
+
+
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 String s1 = rs.getString(1);
@@ -24,6 +34,6 @@ public class DBCoonect {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return res;
     }
-
 }
